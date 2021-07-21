@@ -1,0 +1,13 @@
+{
+    "version": "1.0.0",
+    "parentDirectoryPath": "D:\\DiscordBot",
+    "global": {
+        "readSubFolders": true
+    },
+    "search": {
+        "ignoreFileTypes": ["asar", "dat", "db", "dll", "exe", "heic", "jpeg", "jpg", "map", "md", "mjs", "png", "xml"],
+        "searchFileTypes": ["html", "js"],
+        "useIFT": true,
+        "useSFT": false
+    }
+}
