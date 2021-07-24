@@ -43,23 +43,23 @@ async function search(firstDir, directories, string, args) { //search a director
                         numGoodFiles++;
                     }
 
-                    if (name.includes(".")) { //skip if not a directory cause we don't need to look at the contents
+                    if (type != "Directory") { //skip if not a directory cause we don't need to look at the contents
                         continue;
                     }
                 }
 
                 if (type != "Directory") { //file
                     let data = await readFile(`${firstDir}\\${currentDir}\\${name}`, 'utf8');
-                    
+
                     if (data) {
                         let contains = await searchFile(data, string);
-                        
+
                         if (contains == true) { //found the text we wanted
                             console.log(`${firstDir}${currentDir}\\${name}`);
                             numGoodFiles++;
                         }
                     }
-                } else if ((type == "Directory") && (settings.global.readSubFolders == true)) { //directory
+                } else if ((type == "Directory") && (settings.global.readSubFolders == true) && (settings.global.ignoreFolders.indexOf(name) == -1)) { //directory
                     directories.push(`${currentDir}\\${name}`);
                     // console.log(`${currentDir}\\${name}`);
                 }
