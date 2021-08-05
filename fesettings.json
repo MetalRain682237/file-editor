@@ -6,9 +6,9 @@
         "ignoreFolders": ["node_modules", "STG"]
     },
     "search": {
-        "ignoreFileTypes": ["asar", "dat", "db", "dll", "exe", "heic", "jpeg", "jpg", "map", "md", "mjs", "mp3", "mp4", "pack", "png", "xml"],
-        "searchFileTypes": ["html", "js"],
-        "useIFT": true,
-        "useSFT": false
+        "ignoreFileTypes": ["asar", "dat", "db", "dll", "exe", "heic", "jpeg", "jpg", "map", "md", "mjs", "mp4", "pack", "png", "xml"],
+        "searchFileTypes": ["html"],
+        "useIFT": false,
+        "useSFT": true
     }
 }

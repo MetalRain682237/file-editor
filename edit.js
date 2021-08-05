@@ -1,16 +1,33 @@
 let settings = require('./fesettings.json');
 const { readFile, readDirectory, writeFile } = require('./files');
 
-async function removeString(firstDir, directories, startString, endString) {
-    
-}
+async function removeFileString(firstDir, directories, removeString) {
 
-async function replaceString(firstDir, directories, replaceFrom, replaceWith) {
-    let files = await editSearch(firstDir, directories, replaceFrom);
-    
+    if ((!removeString) || (removeString.length == 0)) {
+        return;
+    }
+
+    let files = await editSearch(firstDir, directories, "", removeString);
+
     for (let i = 0; i < files.length; i++) {
         let dir = files[i];
-        
+
+        let file = await readFile(dir, 'utf8');
+
+        let reg = new RegExp(removeString, "g");
+
+        file = file.replace(reg, "");
+
+        writeFile(dir, 'utf8', file);
+    }
+}
+
+async function replaceFileString(firstDir, directories, replaceFrom, replaceWith) {
+    let files = await editSearch(firstDir, directories, replaceFrom);
+
+    for (let i = 0; i < files.length; i++) {
+        let dir = files[i];
+
         let file = await readFile(dir, 'utf8');
 
         file = file.replace(replaceFrom, replaceWith);
@@ -19,7 +36,7 @@ async function replaceString(firstDir, directories, replaceFrom, replaceWith) {
     }
 }
 
-async function editSearch(firstDir, directories, replaceFrom, startString, endString) { //search a directory and all sub directories
+async function editSearch(firstDir, directories, replaceFrom, searchString) { //search a directory and all sub directories
     return new Promise(resolve => {
         asyncsearch();
         async function asyncsearch() {
@@ -51,19 +68,25 @@ async function editSearch(firstDir, directories, replaceFrom, startString, endSt
                         }
 
                         if (type != "Directory") { //file
-                            let data = await readFile(`${firstDir}\\${currentDir}\\${name}`, 'utf8');
 
-                            if (data) {
-                                let contains;
-                                if (replaceFrom.length > 0) {
-                                    contains = await searchFileOneString(data, replaceFrom);
-                                } else {
-                                    contains = await searchFile(data, startString, endString);
-                                }
+                            if (replaceFrom === undefined) { //just gettting all files
+                                console.log(`${firstDir}${currentDir}\\${name}`);
+                                needToEdit.push(`${firstDir}${currentDir}\\${name}`);
+                            } else {
+                                let data = await readFile(`${firstDir}\\${currentDir}\\${name}`, 'utf8');
 
-                                if (contains == true) { //found the text we wanted
-                                    console.log(`${firstDir}${currentDir}\\${name}`);
-                                    needToEdit.push(`${firstDir}${currentDir}\\${name}`);
+                                if (data) {
+                                    let contains;
+                                    if (replaceFrom.length > 0) {
+                                        contains = await searchFileOneString(data, replaceFrom);
+                                    } else {
+                                        contains = await searchFile(data, searchString);
+                                    }
+
+                                    if (contains == true) { //found the text we wanted
+                                        console.log(`${firstDir}${currentDir}\\${name}`);
+                                        needToEdit.push(`${firstDir}${currentDir}\\${name}`);
+                                    }
                                 }
                             }
                         } else if ((type == "Directory") && (settings.global.readSubFolders == true) && (settings.global.ignoreFolders.indexOf(name) == -1)) { //directory
@@ -81,9 +104,9 @@ async function editSearch(firstDir, directories, replaceFrom, startString, endSt
     });
 }
 
-function searchFile(data, startString, endString) {
+function searchFile(data, searchString) {
     return new Promise(resolve => {
-        if ((data) && (data.includes(startString)) && (data.includes(endString))) {
+        if ((data) && (data.includes(searchString))) {
             return resolve(true);
         } else {
             return resolve(false);
@@ -101,5 +124,4 @@ function searchFileOneString(data, replaceFrom) {
     });
 }
 
-module.exports.removeString = removeString;
-module.exports.replaceString = replaceString;
+module.exports = { removeFileString, replaceFileString, editSearch }

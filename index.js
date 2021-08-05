@@ -4,9 +4,12 @@ let settings = require('./fesettings.json');
 const { startup } = require('./startup');
 const { readFile, readDirectory, writeFile } = require('./files');
 const { search } = require('./search');
-const { removeString, replaceString } = require('./edit');
+const { removeFileString, replaceFileString } = require('./edit');
+const { addToHTML, removeFromHTML } = require('./html');
 
 startup();
+
+let entered = new Array();
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -34,18 +37,16 @@ rl.on('line', async (line) => {
 
     if (args[0] == "edit") {
         if (args.indexOf("-remove") != -1) {
-            rl.question('Start string: ', (startString) => {
-                rl.question('End string: ', (endString) => {
-                    rl.question('What directory under the parent directory, if any: ', (directoryString) => {
-                        if (directoryString.length == 0) {
-                            directoryString = "";
-                        } else {
-                            if (!directoryString.startsWith("\\")) {
-                                directoryString = ("\\" + directoryString);
-                            }
+            rl.question('String to remove: ', (removingString) => {
+                rl.question('What directory under the parent directory, if any: ', (directoryString) => {
+                    if (directoryString.length == 0) {
+                        directoryString = "";
+                    } else {
+                        if (!directoryString.startsWith("\\")) {
+                            directoryString = ("\\" + directoryString);
                         }
-                        removeString(settings.parentDirectoryPath, [directoryString], startString, endString);
-                    });
+                    }
+                    removeFileString(settings.parentDirectoryPath, [directoryString], removingString);
                 });
             });
         } else if (args.indexOf("-replace") != -1) {
@@ -59,9 +60,23 @@ rl.on('line', async (line) => {
                                 directoryString = ("\\" + directoryString);
                             }
                         }
-                        replaceString(settings.parentDirectoryPath, [directoryString], replaceFrom, replaceWith);
+                        replaceFileString(settings.parentDirectoryPath, [directoryString], replaceFrom, replaceWith);
                     });
                 });
+            });
+        } else if (args.indexOf("-head") != -1) {
+            rl.question('What string do you want in the HTML head: ', (htmlHead) => {
+                if (htmlHead.length == 0) {
+                    return;
+                }
+                addToHTML(htmlHead);
+            });
+        } else if (args.indexOf("-removehead") != -1) {
+            rl.question('What string do you want to remove from the HTML head: ', (htmlHead) => {
+                if (htmlHead.length == 0) {
+                    return;
+                }
+                removeFromHTML(htmlHead);
             });
         }
     }

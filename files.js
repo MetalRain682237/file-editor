@@ -25,7 +25,12 @@ function readDirectory(filePath) { //gets a list of directories and files in a f
 }
 
 function writeFile(filePath, encoding, data) { //write a file
-    fs.writeFile(filePath, data, {encoding: encoding}, function (err) {
+
+    if ((!data) || (data.length == 0)) {
+        return
+    }
+
+    fs.writeFile(filePath, data, { encoding: encoding }, function (err) {
         if (err) {
             console.log(err);
         } else {

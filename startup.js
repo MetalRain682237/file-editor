@@ -12,4 +12,4 @@ function startup() { //does a check of the settings JSON and other start up thin
     }
 }
 
-module.exports.startup = startup;
+module.exports = { startup }

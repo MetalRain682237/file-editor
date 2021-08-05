@@ -41,6 +41,8 @@ async function search(firstDir, directories, string, args) { //search a director
                     if (name.includes(string)) { //found the name we wanted
                         console.log(`${firstDir}${currentDir}\\${name}`);
                         numGoodFiles++;
+                        // let data = await readFile(`${firstDir}${currentDir}\\${name}`, 'base64');
+                        // console.log(data);
                     }
 
                     if (type != "Directory") { //skip if not a directory cause we don't need to look at the contents
