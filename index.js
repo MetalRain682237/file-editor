@@ -5,7 +5,7 @@ const { startup } = require('./startup');
 const { readFile, readDirectory, writeFile } = require('./files');
 const { search } = require('./search');
 const { removeFileString, replaceFileString } = require('./edit');
-const { addToHTML, removeFromHTML } = require('./html');
+const { addToHTML, removeFromHTML, addToHTMLHead, removeFromHTMLHead } = require('./html');
 
 startup();
 
@@ -64,19 +64,19 @@ rl.on('line', async (line) => {
                     });
                 });
             });
-        } else if (args.indexOf("-head") != -1) {
+        } else if (args.indexOf("-addhead") != -1) {
             rl.question('What string do you want in the HTML head: ', (htmlHead) => {
                 if (htmlHead.length == 0) {
                     return;
                 }
-                addToHTML(htmlHead);
+                addToHTMLHead(htmlHead);
             });
         } else if (args.indexOf("-removehead") != -1) {
             rl.question('What string do you want to remove from the HTML head: ', (htmlHead) => {
                 if (htmlHead.length == 0) {
                     return;
                 }
-                removeFromHTML(htmlHead);
+                removeFromHTMLHead(htmlHead);
             });
         }
     }

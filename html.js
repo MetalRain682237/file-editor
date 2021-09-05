@@ -17,8 +17,9 @@ async function addToHTMLHead(addString) {
         let htmlHeadString = getHTMLHeadString(file);
         
         if ((htmlHeadString) && (!htmlHeadString.includes(addString))) { //if we have a file and it doesn't contain the string we are looking for
-            let newFile = addToHTMLHeadString(htmlHeadString, addString);
-            
+            let newHead = addToHTMLHeadString(htmlHeadString, addString);
+            let newFile = replaceHTMLHeadString(file, htmlHeadString, newHead);
+
             writeFile(dir, 'utf8', newFile);
             console.log(`Changed ${dir}`);
         }
@@ -36,7 +37,8 @@ async function removeFromHTMLHead(removeString) {
         let htmlHeadString = getHTMLHeadString(file);
 
         if ((htmlHeadString) && (htmlHeadString.includes(removeString))) { //if we have a file and it does contain the string we are looking for
-            let newFile = await removeFromHTMLHeadString(htmlHeadString, removeString);
+            let newHead = await removeFromHTMLHeadString(htmlHeadString, removeString);
+            let newFile = replaceHTMLHeadString(file, htmlHeadString, newHead);
 
             writeFile(dir, 'utf8', newFile);
             console.log(`Changed ${dir}`);
@@ -60,25 +62,42 @@ function replaceHTMLHeadString(file, oldHead, newHead) {
 }
 
 function addToHTMLHeadString(headString, addString) {
-    let newFile = (`${headString}\n    ${addString}`);
+    let newFile = (`${headString}\n    ${addString}\n`);
 
     return newFile;
 }
 
-function removeFromHTMLHeadString(head, removeString) {
+function removeFromHTMLHeadString(headString, removeString) {
     return new Promise(resolve => {
-        let lines = head.split("\n");
+        let lines = headString.split("\n");
         let newFile = "";
-
+        
         for (let i = 0; i < lines.length; i++) {
             let line = lines[i];
-
+            
             if (!line.includes(removeString)) {
                 newFile += line;
             }
-
+            
             if (i == (lines.length - 1)) {
+                newFile += "\n";
                 return resolve(newFile);
+            }
+        }
+    });
+}
+
+function formatHTMLHead(headString) {
+    return new Promise(resolve => {
+        let lines = headString.split("\n");
+        let newLines = new Array(lines.length);
+
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i];
+            let type = line.split(" ")[0].replace(/</g, "");
+
+            if (settings.html.headOrder.indexOf(type) != -1) {
+                newLines[settings.html.headOrder.indexOf(type)];
             }
         }
     });

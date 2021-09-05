@@ -1,14 +1,17 @@
 {
     "version": "1.0.0",
-    "parentDirectoryPath": "D:\\DiscordBot\\TestEdit",
+    "parentDirectoryPath": "C:\\",
     "global": {
         "readSubFolders": true,
         "ignoreFolders": ["node_modules", "STG"]
     },
     "search": {
-        "ignoreFileTypes": ["asar", "dat", "db", "dll", "exe", "heic", "jpeg", "jpg", "map", "md", "mjs", "mp4", "pack", "png", "xml"],
+        "ignoreFileTypes": ["asar", "dat", "db", "dll", "exe", "heic", "jpeg", "jpg", "map", "md", "mjs", "mp3", "mp4", "pack", "png", "xml"],
         "searchFileTypes": ["html"],
-        "useIFT": false,
-        "useSFT": true
+        "useIFT": true,
+        "useSFT": false
+    },
+    "html": {
+        "headOrder": ["title", "meta", "link", "script"]
     }
 }
